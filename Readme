@@ -1,0 +1,5 @@
+1. python -m venv venv
+2. venv\Scripts\activate
+3. En VsCode, en la parte inferior derecha aplastas la versión de python, y eliges el interprete de venv
+4. pip install -r requirements-dev.txt
+5. Listo
