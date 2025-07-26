@@ -10,10 +10,10 @@ from ..database.core import Base
 
 class Recomendacion(Base):
     __tablename__ = "recomendaciones"
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     origen_id = Column(Integer, ForeignKey("libros.id"), nullable=False)
     recomendado_id = Column(Integer, ForeignKey("libros.id"), nullable=False)
-    comentario = Column(String(500))
+    comentario = Column(String(500), nullable=True)
 
     __table_args__ = (
         UniqueConstraint("origen_id", "recomendado_id", name="uq_origen_recomendado"),

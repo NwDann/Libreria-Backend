@@ -18,5 +18,4 @@ class Ejemplar(Base):
     observaciones = Column(String(500), nullable=True)
 
     libro = relationship("Libro", back_populates="ejemplares")
-    prestamos = relationship("Prestamo", back_populates="ejemplar")
     prestamos_hist = relationship("PrestamoHist", back_populates="ejemplar")

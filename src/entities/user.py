@@ -30,7 +30,5 @@ class Usuario(Base):
         "polymorphic_on": type
     }
 
-    prestamos = relationship("Prestamo", back_populates="usuario")
     prestamos_hist = relationship("PrestamoHist", back_populates="usuario")
-    multas = relationship("Multa", back_populates="usuario")
     multas_hist = relationship("MultaHist", back_populates="usuario")
