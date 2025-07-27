@@ -13,6 +13,10 @@ class EstadoUsuarioEnum(str, Enum):
     MOROSO = "MOROSO"
     MULTADO = "MULTADO"
 
+class TipoUsuarioEnum(str, Enum):
+    ALUMNO = "ALUMNO"
+    PROFESOR = "PROFESOR"
+
 class Usuario(Base):
     __tablename__ = "usuarios"
     id = Column(BigInteger, primary_key=True)
@@ -20,14 +24,14 @@ class Usuario(Base):
     email = Column(String(120), unique=True, nullable=False)
     nombre = Column(String(50), nullable=False)
     apellido1 = Column(String(50), nullable=False)
-    apellido2 = Column(String(50))
+    apellido2 = Column(String(50), nullable=True)
     ciudad = Column(String(50), nullable=False)
     estado = Column(PgEnum(EstadoUsuarioEnum), default=EstadoUsuarioEnum.ACTIVO, nullable=False)
-    tipo = Column(String(20), nullable=False)  # para herencia
+    tipo = Column(PgEnum(TipoUsuarioEnum), nullable=False)  # para herencia
 
     __mapper_args__ = {
         "polymorphic_identity": "usuario",
-        "polymorphic_on": type
+        "polymorphic_on": tipo
     }
 
     prestamos_hist = relationship("PrestamoHist", back_populates="usuario")

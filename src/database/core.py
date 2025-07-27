@@ -2,12 +2,12 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session, declarative_base
-import os
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 
-load_dotenv()
+config = dotenv_values(".env")
+DATABASE_URL = config.get("DATABASE_URL")
 
-DATABASE_URL=os.getenv("DATABASE_URL")
+print(f"Database URL: {DATABASE_URL}")
 
 engine = create_engine(DATABASE_URL)
 

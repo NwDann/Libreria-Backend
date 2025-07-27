@@ -5,6 +5,7 @@ from . import  models
 from . import service
 from fastapi.security import OAuth2PasswordRequestForm
 from ..database.core import DbSession
+
 router = APIRouter(
     prefix='/auth',
     tags=['auth']

@@ -1,6 +1,5 @@
 from datetime import timedelta, datetime, timezone
 from typing import Annotated
-from uuid import UUID, uuid4
 from fastapi import Depends
 
 from passlib.context import CryptContext
@@ -8,8 +7,11 @@ import jwt
 from jwt import PyJWTError
 
 from sqlalchemy.orm import Session
-from src.entities.user import User
+from src.entities.user import Usuario
+from src.entities.student import Alumno
+from src.entities.teacher import Profesor
 from . import models
+
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from ..exceptions import AuthenticationError
 import logging
@@ -35,15 +37,15 @@ def get_password_hash(password: str) -> str:
     return bcrypt_context.hash(password)
 
 
-def authenticate_user(email: str, password: str, db: Session) -> User | bool:
-    user = db.query(User).filter(User.email == email).first()
+def authenticate_user(email: str, password: str, db: Session) -> Usuario | bool:
+    user = db.query(Usuario).filter(Usuario.email == email).first()
     if not user or not verify_password(password, user.password_hash):
-        logging.warning(f"Failed authentication attempt for email: {email}")
+        logging.warning(f"Intento de autenticacion fallida: {email}")
         return False
     return user
 
 
-def create_access_token(email: str, user_id: UUID, expires_delta: timedelta) -> str:
+def create_access_token(email: str, user_id: int, expires_delta: timedelta) -> str:
     encode = {
         'sub': email,
         'id': str(user_id),
@@ -55,29 +57,49 @@ def create_access_token(email: str, user_id: UUID, expires_delta: timedelta) -> 
 def verify_token(token: str) -> models.TokenData:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: str = payload.get('id')
+        user_id: int = int(payload.get('id'), 10)
         return models.TokenData(user_id=user_id)
     except PyJWTError as e:
-        logging.warning(f"Token verification failed: {str(e)}")
+        logging.warning(f"Verificacion fallida del token: {str(e)}")
         raise AuthenticationError()
-
 
 def register_user(db: Session, register_user_request: models.RegisterUserRequest) -> None:
     try:
-        create_user_model = User(
-            id=uuid4(),
+        if (register_user_request.telefono_padres is None and register_user_request.departamento is None) or (register_user_request.telefono_padres is not None and register_user_request.departamento is not None):
+            raise AuthenticationError()
+        
+        new_user = Usuario(
+            id=register_user_request.id,
+            password_hash=get_password_hash(register_user_request.password),
             email=register_user_request.email,
-            first_name=register_user_request.first_name,
-            last_name=register_user_request.last_name,
-            password_hash=get_password_hash(register_user_request.password)
+            nombre=register_user_request.nombre,
+            apellido1=register_user_request.apellido1,
+            apellido2=register_user_request.apellido2,
+            ciudad=register_user_request.ciudad,
+            tipo=register_user_request.tipo
         )    
-        db.add(create_user_model)
+        db.add(new_user)
+        
+        if register_user_request.tipo == models.TipoUsuarioEnum.ALUMNO:
+            alumno = Alumno(
+                usuario_id=register_user_request.id,
+                telefono_padres=register_user_request.telefono_padres
+            )
+            db.add(alumno)
+        elif register_user_request.tipo == models.TipoUsuarioEnum.PROFESOR:
+            profesor = Profesor(
+                usuario_id=register_user_request.id,
+                departamento=register_user_request.departamento
+            )
+            db.add(profesor)
+        
         db.commit()
+        
     except Exception as e:
-        logging.error(f"Failed to register user: {register_user_request.email}. Error: {str(e)}")
+        db.rollback()
+        logging.error(f"Error al registrar el usuario: {register_user_request.email}. Error: {str(e)}")
         raise
-    
-    
+
 def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]) -> models.TokenData:
     return verify_token(token)
 

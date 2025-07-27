@@ -4,7 +4,7 @@ from sqlalchemy import (
   ForeignKey,
   BigInteger
 )
-from user import Usuario
+from .user import Usuario
 
 class Alumno(Usuario):
     __tablename__ = "alumnos"
