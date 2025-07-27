@@ -1,43 +1,21 @@
-from sqlalchemy.orm import Session
-from ..entities import Recomendacion, Libro
-from .models import RecommendationResponse
-from ...exceptions import BookNotFoundError, RecommendationExistsError
+from fastapi import APIRouter, Depends, status
+from typing import List
+from .models import RecommendationResponse, RecommendationCreate
+from .service import RecommendationService
+from ...database.core import DbSession
 
-class RecommendationService:
-    @staticmethod
-    def create_recommendation(
-        db: Session, 
-        data: RecommendationCreate
-    ) -> RecommendationResponse:
-        if not db.query(Libro).filter(Libro.id == data.origen_id).first():
-            raise BookNotFoundError(data.origen_id)
-            
-        if not db.query(Libro).filter(Libro.id == data.recomendado_id).first():
-            raise BookNotFoundError(data.recomendado_id)
-            
-        if db.query(Recomendacion).filter_by(
-            origen_id=data.origen_id,
-            recomendado_id=data.recomendado_id
-        ).first():
-            raise RecommendationExistsError()
-            
-        new_rec = Recomendacion(
-            origen_id=data.origen_id,
-            recomendado_id=data.recomendado_id,
-            comentario=data.comentario
-        )
-        
-        db.add(new_rec)
-        db.commit()
-        return RecommendationResponse.model_validate(new_rec)
+router = APIRouter(prefix="/recommendations", tags=["recommendations"])
 
-    @staticmethod
-    def get_recommendations_for_book(
-        db: Session, 
-        book_id: int
-    ) -> List[RecommendationResponse]:
-        recommendations = db.query(Recomendacion).filter(
-            Recomendacion.origen_id == book_id
-        ).all()
-        
-        return [RecommendationResponse.model_validate(rec) for rec in recommendations]
+@router.post("/", response_model=RecommendationResponse, status_code=status.HTTP_201_CREATED)
+async def create_recommendation(
+    data: RecommendationCreate, 
+    db: DbSession = Depends()
+):
+    return RecommendationService.create_recommendation(db, data)
+
+@router.get("/book/{book_id}", response_model=List[RecommendationResponse])
+async def get_book_recommendations(
+    book_id: int, 
+    db: DbSession = Depends()
+):
+    return RecommendationService.get_recommendations_for_book(db, book_id)

@@ -14,10 +14,3 @@ async def get_my_penalty(
 ):
     PenaltyService.check_and_apply_penalties(db, current_user.user_id)
     return PenaltyService.get_active_penalty(db, current_user.user_id)
-
-@router.get("/my-history", response_model=List[PenaltyHistoryResponse])
-async def get_my_penalty_history(
-    db: DbSession = Depends(),
-    current_user: CurrentUser = Depends()
-):
-    return PenaltyService.get_penalty_history(db, current_user.user_id)

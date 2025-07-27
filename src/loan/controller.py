@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, status, HTTPException
-from .models import LoanResponse, LoanCreate, UserLoansResponse, LoanHistoryResponse
+from typing import List
+from .models import LoanResponse, LoanCreate
 from .service import LoanService
 from ...database.core import DbSession
 from ...auth.service import CurrentUser
@@ -19,17 +20,9 @@ async def create_loan(
         )
     return LoanService.create_loan(db, loan_data)
 
-@router.post("/{loan_id}/return", response_model=LoanHistoryResponse)
-async def return_loan(
-    loan_id: int,
-    db: DbSession = Depends(),
-    current_user: CurrentUser = Depends()
-):
-    return LoanService.return_loan(db, loan_id, current_user.user_id)
-
-@router.get("/my-loans", response_model=UserLoansResponse)
+@router.get("/my-loans", response_model=List[LoanResponse])
 async def get_my_loans(
     db: DbSession = Depends(),
     current_user: CurrentUser = Depends()
 ):
-    return LoanService.get_user_loans(db, current_user.user_id)
+    return LoanService.get_active_loans(db, current_user.user_id)

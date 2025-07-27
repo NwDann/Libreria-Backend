@@ -6,20 +6,20 @@ from ...exceptions import LoanHistoryNotFoundError
 
 class LoanHistoryService:
     @staticmethod
-    def get_loan_history_by_user(db: Session, user_id: int) -> List[LoanHistoryResponse]:
-        history = db.query(PrestamoHist).filter(
-            PrestamoHist.usuario_id == user_id
-        ).order_by(PrestamoHist.fecha_prestamo.desc()).all()
-        
-        return [LoanHistoryResponse.model_validate(record) for record in history]
-
+    def create_history_record(db: Session, loan_data: dict) -> LoanHistoryResponse:
+        record = PrestamoHist(**loan_data)
+        db.add(record)
+        db.commit()
+        return LoanHistoryResponse.model_validate(record)
+    
     @staticmethod
-    def get_loan_history_by_copy(db: Session, copy_id: int) -> List[LoanHistoryResponse]:
-        history = db.query(PrestamoHist).filter(
-            PrestamoHist.ejemplar_id == copy_id
-        ).order_by(PrestamoHist.fecha_prestamo.desc()).all()
-        
-        if not history:
+    def get_by_user(db: Session, user_id: int) -> List[LoanHistoryResponse]:
+        records = db.query(PrestamoHist).filter_by(usuario_id=user_id).all()
+        return [LoanHistoryResponse.model_validate(r) for r in records]
+    
+    @staticmethod
+    def get_by_copy(db: Session, copy_id: int) -> List[LoanHistoryResponse]:
+        records = db.query(PrestamoHist).filter_by(ejemplar_id=copy_id).all()
+        if not records:
             raise LoanHistoryNotFoundError()
-            
-        return [LoanHistoryResponse.model_validate(record) for record in history]
+        return [LoanHistoryResponse.model_validate(r) for r in records]

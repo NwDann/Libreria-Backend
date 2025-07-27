@@ -53,11 +53,3 @@ class PenaltyService:
             raise NoActivePenaltyError()
             
         return PenaltyResponse.model_validate(penalty)
-
-    @staticmethod
-    def get_penalty_history(db: Session, user_id: int) -> List[PenaltyHistoryResponse]:
-        history = db.query(MultaHist).filter(
-            MultaHist.usuario_id == user_id
-        ).all()
-        
-        return [PenaltyHistoryResponse.model_validate(record) for record in history]

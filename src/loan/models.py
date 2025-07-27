@@ -16,19 +16,3 @@ class LoanResponse(BaseModel):
     class Config:
         from_attributes = True
 
-class LoanHistoryResponse(BaseModel):
-    id: int
-    usuario_id: int
-    ejemplar_id: int
-    fecha_prestamo: date
-    fecha_prevista: date
-    fecha_devolucion: date
-    estado: bool
-    multa_id: Optional[int]
-    
-    class Config:
-        from_attributes = True
-
-class UserLoansResponse(BaseModel):
-    prestamos_activos: List[LoanResponse]
-    prestamos_historial: List[LoanHistoryResponse]
