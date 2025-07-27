@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from typing import List
-from ..entities import MultaHist
-from .models import PenaltyHistoryResponse
-from ...exceptions import PenaltyHistoryNotFoundError
+from ..entities.penaltyHistory import MultaHist
+from ..models.penaltyHistory_mdl import PenaltyHistoryResponse
+from ..exceptions import PenaltyHistoryNotFoundError
 
 class PenaltyHistoryService:
     @staticmethod

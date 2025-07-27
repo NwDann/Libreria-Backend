@@ -3,7 +3,8 @@ from sqlalchemy import (
   ForeignKey,
   Date,
   String,
-  Integer
+  Integer,
+  Boolean
 )
 from sqlalchemy.orm import relationship
 from datetime import date
@@ -14,6 +15,7 @@ class Ejemplar(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     libro_id = Column(Integer, ForeignKey("libros.id"), nullable=False)
     codigo = Column(String(50), unique=True, nullable=False)
+    disponible = Column(Boolean, default=True, nullable=False)
     fecha_adquisicion = Column(Date, default=date.today)
     observaciones = Column(String(500), nullable=True)
 

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, status
 from typing import List
-from .models import RecommendationResponse, RecommendationCreate
-from .service import RecommendationService
-from ...database.core import DbSession
+from ..models.recomendation_mdl import RecommendationResponse, RecommendationCreate
+from ..services.recomendation_svc import RecommendationService
+from ..database.core import DbSession
 
 router = APIRouter(prefix="/recommendations", tags=["recommendations"])
 

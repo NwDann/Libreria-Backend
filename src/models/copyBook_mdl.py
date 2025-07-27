@@ -3,8 +3,8 @@ from datetime import date
 from typing import Optional
 
 class CopyBase(BaseModel):
-    codigo: str
     libro_id: int
+    codigo: str
     observaciones: Optional[str] = None
 
 class CopyCreate(CopyBase):

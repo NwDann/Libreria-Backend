@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from typing import List
-from .models import PenaltyHistoryResponse
-from .service import PenaltyHistoryService
-from ...database.core import DbSession
-from ...auth.service import CurrentUser
+from ..models.penaltyHistory_mdl import PenaltyHistoryResponse
+from ..services.penaltyHistory_svc import PenaltyHistoryService
+from ..database.core import DbSession
+from ..auth.service import CurrentUser
 
 router = APIRouter(prefix="/penalties-history", tags=["penalties-history"])
 

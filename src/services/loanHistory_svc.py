@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from typing import List
-from ..entities import PrestamoHist
-from .models import LoanHistoryResponse
-from ...exceptions import LoanHistoryNotFoundError
+from ..entities.loanHistory import PrestamoHist
+from ..models.loanHistory_mdl import LoanHistoryResponse
+from ..exceptions import LoanHistoryNotFoundError
 
 class LoanHistoryService:
     @staticmethod

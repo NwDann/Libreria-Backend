@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from typing import List
-from .models import LoanResponse, LoanCreate
-from .service import LoanService
-from ...database.core import DbSession
-from ...auth.service import CurrentUser
+from ..models.loan_mdl import LoanResponse, LoanCreate
+from ..services.loan_svc import LoanService
+from ..database.core import DbSession
+from ..auth.service import CurrentUser
 
 router = APIRouter(prefix="/loans", tags=["loans"])
 

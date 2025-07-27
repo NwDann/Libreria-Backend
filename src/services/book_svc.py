@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
-from ..entities import Libro
-from .models import BookResponse, BookWithCopiesResponse, BookWithRecommendationsResponse
-from ...exceptions import BookNotFoundError
+from ..entities.book import Libro
+from ..models.book_mdl import BookResponse, BookWithCopies, BookWithRecommendations
+from ..exceptions import BookNotFoundError
+from typing import List
 
 class BookService:
     @staticmethod
@@ -19,12 +20,12 @@ class BookService:
         ) for book in books]
 
     @staticmethod
-    def get_book_details(db: Session, book_id: int) -> BookWithCopiesResponse:
+    def get_book_details(db: Session, book_id: int) -> BookWithCopies:
         book = db.query(Libro).filter(Libro.id == book_id).first()
         if not book:
             raise BookNotFoundError(book_id)
         
-        return BookWithCopiesResponse(
+        return BookWithCopies(
             id=book.id,
             isbn=book.isbn,
             titulo=book.titulo,
@@ -37,12 +38,12 @@ class BookService:
         )
 
     @staticmethod
-    def get_book_recommendations(db: Session, book_id: int) -> BookWithRecommendationsResponse:
+    def get_book_recommendations(db: Session, book_id: int) -> BookWithRecommendations:
         book = db.query(Libro).filter(Libro.id == book_id).first()
         if not book:
             raise BookNotFoundError(book_id)
             
-        return BookWithRecommendationsResponse(
+        return BookWithRecommendations(
             id=book.id,
             isbn=book.isbn,
             titulo=book.titulo,

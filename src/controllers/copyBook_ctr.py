@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status
-from .models import CopyResponse, CopyCreate
-from .service import CopyService
-from ...database.core import DbSession
+from ..models.copyBook_mdl import CopyResponse, CopyCreate
+from ..services.copyBook_svc import CopyService
+from ..database.core import DbSession
 
 router = APIRouter(prefix="/copies", tags=["copies"])
 

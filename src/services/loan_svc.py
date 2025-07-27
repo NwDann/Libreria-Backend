@@ -1,8 +1,11 @@
 from datetime import date, timedelta
 from sqlalchemy.orm import Session
-from ..entities import Prestamo, Usuario, Ejemplar
-from .models import LoanResponse
-from ...exceptions import (
+from ..entities.loan import Prestamo
+from ..entities.user import Usuario
+from ..entities.copyBook import Ejemplar
+from ..models.loan_mdl import LoanResponse
+from typing import List
+from ..exceptions import (
     UserNotFoundError, 
     CopyNotFoundError,
     LoanLimitExceededError,

@@ -1,7 +1,9 @@
 from sqlalchemy.orm import Session
-from ..entities import Recomendacion, Libro
-from .models import RecommendationResponse
-from ...exceptions import BookNotFoundError, RecommendationExistsError
+from ..entities.recomendation import Recomendacion
+from ..entities.book import Libro
+from ..models.recomendation_mdl import RecommendationResponse, RecommendationCreate
+from typing import List
+from ..exceptions import BookNotFoundError, RecommendationExistsError
 
 class RecommendationService:
     @staticmethod

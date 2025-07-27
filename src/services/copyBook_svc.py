@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
 from datetime import date
-from ..entities import Ejemplar, Libro
-from .models import CopyResponse
-from ...exceptions import BookNotFoundError, CopyNotFoundError
+from ..entities.copyBook import Ejemplar
+from ..entities.book import Libro
+from ..models.copyBook_mdl import CopyResponse, CopyCreate
+from ..exceptions import BookNotFoundError, CopyNotFoundError
 
 class CopyService:
     @staticmethod

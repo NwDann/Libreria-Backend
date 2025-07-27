@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from typing import List
-from .models import LoanHistoryResponse
-from .service import LoanHistoryService
-from ...database.core import DbSession
-from ...auth.service import CurrentUser
+from ..models.loanHistory_mdl import LoanHistoryResponse
+from ..services.loanHistory_svc import LoanHistoryService
+from ..database.core import DbSession
+from ..auth.service import CurrentUser
 
 router = APIRouter(prefix="/loans-history", tags=["loans-history"])
 

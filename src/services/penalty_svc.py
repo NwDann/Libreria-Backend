@@ -1,8 +1,11 @@
 from datetime import date, timedelta
 from sqlalchemy.orm import Session
-from ..entities import Multa, MultaHist, Usuario, Prestamo
-from .models import PenaltyResponse
-from ...exceptions import UserNotFoundError, NoActivePenaltyError
+from ..entities.penalty import Multa
+from ..entities.penaltyHistory import MultaHist
+from ..entities.user import Usuario
+from ..entities.loan import Prestamo
+from ..models.penalty_mdl import PenaltyResponse
+from ..exceptions import UserNotFoundError, NoActivePenaltyError
 
 class PenaltyService:
     @staticmethod
