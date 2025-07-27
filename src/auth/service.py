@@ -2,9 +2,11 @@ from datetime import timedelta, datetime, timezone
 from typing import Annotated
 from uuid import UUID, uuid4
 from fastapi import Depends
+
 from passlib.context import CryptContext
 import jwt
 from jwt import PyJWTError
+
 from sqlalchemy.orm import Session
 from src.entities.user import User
 from . import models
@@ -17,7 +19,6 @@ import os
 
 load_dotenv()
 
-# You would want to store this in an environment variable or a secret manager
 SECRET_KEY = os.getenv("SECRET-KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
