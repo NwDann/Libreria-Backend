@@ -6,18 +6,13 @@ from ...exceptions import PenaltyHistoryNotFoundError
 
 class PenaltyHistoryService:
     @staticmethod
-    def get_penalty_history_by_user(db: Session, user_id: int) -> List[PenaltyHistoryResponse]:
-        history = db.query(MultaHist).filter(
-            MultaHist.usuario_id == user_id
-        ).order_by(MultaHist.fecha_inicio.desc()).all()
-        
-        return [PenaltyHistoryResponse.model_validate(record) for record in history]
-
+    def get_by_user(db: Session, user_id: int) -> List[PenaltyHistoryResponse]:
+        records = db.query(MultaHist).filter_by(usuario_id=user_id).all()
+        return [PenaltyHistoryResponse.model_validate(r) for r in records]
+    
     @staticmethod
-    def get_all_penalty_history(db: Session) -> List[PenaltyHistoryResponse]:
-        history = db.query(MultaHist).order_by(MultaHist.fecha_inicio.desc()).all()
-        
-        if not history:
+    def get_all(db: Session) -> List[PenaltyHistoryResponse]:
+        records = db.query(MultaHist).all()
+        if not records:
             raise PenaltyHistoryNotFoundError()
-            
-        return [PenaltyHistoryResponse.model_validate(record) for record in history]
+        return [PenaltyHistoryResponse.model_validate(r) for r in records]

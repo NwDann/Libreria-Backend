@@ -12,8 +12,8 @@ async def get_my_penalty_history(
     db: DbSession = Depends(),
     current_user: CurrentUser = Depends()
 ):
-    return PenaltyHistoryService.get_penalty_history_by_user(db, current_user.user_id)
+    return PenaltyHistoryService.get_by_user(db, current_user.user_id)
 
 @router.get("/", response_model=List[PenaltyHistoryResponse])
 async def get_all_penalty_history(db: DbSession = Depends()):
-    return PenaltyHistoryService.get_all_penalty_history(db)
+    return PenaltyHistoryService.get_all(db)
