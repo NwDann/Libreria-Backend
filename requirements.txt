@@ -1,6 +1,11 @@
  fastapi
  uvicorn
  sqlalchemy
- dotenv
- jwt
+ alembic
+ psycopg2-binary
+ python-dotenv
+ pyjwt
  passlib
+ bcrypt
+ python-multipart
+ email-validator
