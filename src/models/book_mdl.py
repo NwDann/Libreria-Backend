@@ -1,5 +1,7 @@
 from pydantic import BaseModel, HttpUrl
 from typing import Optional, List
+from .copyBook_mdl import CopyResponse
+from .recomendation_mdl import RecommendationResponse
 
 class BookBase(BaseModel):
     isbn: str
