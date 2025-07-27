@@ -15,3 +15,11 @@ class LoanResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class LoanReturnResponse(BaseModel):
+    success: bool
+    message: str
+    penalty_applied: bool = False
+    penalty_days: int = 0
+
+    class Config:
+        from_attributes = True
