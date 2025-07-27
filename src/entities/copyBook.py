@@ -19,3 +19,4 @@ class Ejemplar(Base):
 
     libro = relationship("Libro", back_populates="ejemplares")
     prestamos_hist = relationship("PrestamoHist", back_populates="ejemplar")
+    prestamos = relationship("Prestamo", back_populates="ejemplar")

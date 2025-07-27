@@ -2,3 +2,5 @@
  uvicorn
  sqlalchemy
  dotenv
+ jwt
+ passlib

@@ -2,7 +2,7 @@ from sqlalchemy import (
   Column,
   String,
   Enum as PgEnum,
-  Integer
+  BigInteger
 )
 from sqlalchemy.orm import relationship
 from enum import Enum
@@ -15,7 +15,7 @@ class EstadoUsuarioEnum(str, Enum):
 
 class Usuario(Base):
     __tablename__ = "usuarios"
-    id = Column(Integer, primary_key=True)
+    id = Column(BigInteger, primary_key=True)
     password_hash = Column(String(128), nullable=False)
     email = Column(String(120), unique=True, nullable=False)
     nombre = Column(String(50), nullable=False)
@@ -23,7 +23,7 @@ class Usuario(Base):
     apellido2 = Column(String(50))
     ciudad = Column(String(50), nullable=False)
     estado = Column(PgEnum(EstadoUsuarioEnum), default=EstadoUsuarioEnum.ACTIVO, nullable=False)
-    type = Column(String(20), nullable=False)  # para herencia
+    tipo = Column(String(20), nullable=False)  # para herencia
 
     __mapper_args__ = {
         "polymorphic_identity": "usuario",
@@ -32,3 +32,5 @@ class Usuario(Base):
 
     prestamos_hist = relationship("PrestamoHist", back_populates="usuario")
     multas_hist = relationship("MultaHist", back_populates="usuario")
+    prestamos = relationship("Prestamo", back_populates="usuario")
+    multas = relationship("Multa", back_populates="usuario")

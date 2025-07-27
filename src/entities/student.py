@@ -2,13 +2,13 @@ from sqlalchemy import (
   Column,
   String,
   ForeignKey,
-  Integer
+  BigInteger
 )
 from user import Usuario
 
 class Alumno(Usuario):
     __tablename__ = "alumnos"
-    usuario_id = Column(Integer, ForeignKey("usuarios.id"), primary_key=True)
+    usuario_id = Column(BigInteger, ForeignKey("usuarios.id"), primary_key=True)
     telefono_padres = Column(String(20), nullable=False)
 
     __mapper_args__ = {
