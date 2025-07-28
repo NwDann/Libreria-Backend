@@ -10,9 +10,9 @@ router = APIRouter(prefix="/loans-history", tags=["loans-history"])
 @router.get("/my-history", response_model=List[LoanHistoryResponse])
 async def get_my_loan_history(
     db: DbSession,
-    current_user: CurrentUser
+    user_id: int  # Query parameter
 ):
-    return LoanHistoryService.get_by_user(db, current_user.user_id)
+    return LoanHistoryService.get_by_user(db, user_id)
 
 @router.get("/copy/{copy_id}", response_model=List[LoanHistoryResponse])
 async def get_copy_loan_history(

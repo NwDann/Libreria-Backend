@@ -23,9 +23,9 @@ async def create_loan(
 @router.get("/my-loans", response_model=List[LoanResponse])
 async def get_my_loans(
     db: DbSession,
-    current_user: CurrentUser
+    user_id: int
 ):
-    return LoanService.get_active_loans(db, current_user.user_id)
+    return LoanService.get_active_loans(db, user_id)
 
 @router.post("/{loan_id}/return", response_model=LoanReturnResponse)
 async def return_loan(

@@ -157,7 +157,8 @@ for user in usuarios:
             multa_obj = Multa(
                 usuario_id=user.id,
                 fecha_inicio=devolucion,
-                fecha_fin=devolucion + timedelta(days=dias_multa * 2)
+                fecha_fin=devolucion + timedelta(days=dias_multa * 2),
+                dias_acumulados=dias_multa * 2
             )
             session.add(multa_obj)
             session.flush()  # Obtener multa.id

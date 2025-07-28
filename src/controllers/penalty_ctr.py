@@ -9,7 +9,7 @@ router = APIRouter(prefix="/penalties", tags=["penalties"])
 @router.get("/my-penalty", response_model=PenaltyResponse)
 async def get_my_penalty(
     db: DbSession,
-    current_user: CurrentUser 
+    user_id: int  # Query parameter
 ):
-    PenaltyService.check_and_apply_penalties(db, current_user.user_id)
-    return PenaltyService.get_active_penalty(db, current_user.user_id)
+    PenaltyService.check_and_apply_penalties(db, user_id)
+    return PenaltyService.get_active_penalty(db, user_id)
