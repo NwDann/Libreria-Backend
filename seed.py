@@ -5,9 +5,7 @@ from sqlalchemy.orm import Session
 from faker import Faker
 from src.database.core import Base, engine
 
-from src.entities.user import Usuario
-from src.entities.user import EstadoUsuarioEnum
-from src.entities.user import TipoUsuarioEnum
+from src.entities.user import Usuario, TipoUsuarioEnum, EstadoUsuarioEnum
 from src.entities.student import Alumno
 from src.entities.teacher import Profesor
 from src.entities.book import Libro
@@ -25,37 +23,61 @@ session = Session(bind=engine)
 
 # Crear usuarios (5 alumnos, 3 profesores)
 usuarios = []
+alumnos = []
+profesores = []
 
-for _ in range(5):
-    user = Alumno(
-        password_hash="hash1",
+# Crear alumnos
+for i in range(5):
+    user_id = 1000000000 + i  # Simula cédula
+    user = Usuario(
+        id=user_id,
+        password_hash=f"pass{i}",  # sin hashear
         email=fake.unique.email(),
         nombre=fake.first_name(),
         apellido1=fake.last_name(),
         apellido2=fake.last_name(),
         ciudad=fake.city(),
         estado=EstadoUsuarioEnum.ACTIVO,
-        tipo=TipoUsuarioEnum.ALUMNO,
-        telefono_padres=fake.phone_number()
+        tipo=TipoUsuarioEnum.ALUMNO
     )
     usuarios.append(user)
 
-for _ in range(3):
-    user = Profesor(
-        password_hash="hash2",
+# Crear profesores
+for i in range(3):
+    user_id = 2000000000 + i
+    user = Usuario(
+        id=user_id,
+        password_hash=f"pass{i+5}",  # sin hashear
         email=fake.unique.email(),
         nombre=fake.first_name(),
         apellido1=fake.last_name(),
         apellido2=fake.last_name(),
         ciudad=fake.city(),
         estado=EstadoUsuarioEnum.ACTIVO,
-        tipo=TipoUsuarioEnum.PROFESOR,
-        departamento=fake.word()
+        tipo=TipoUsuarioEnum.PROFESOR
     )
     usuarios.append(user)
 
 session.add_all(usuarios)
 session.commit()
+
+for u in usuarios:
+    if u.tipo == TipoUsuarioEnum.ALUMNO:
+        alumno = Alumno(
+            usuario_id=u.id,
+            telefono_padres=fake.phone_number()
+        )
+        alumnos.append(alumno)
+    elif u.tipo == TipoUsuarioEnum.PROFESOR:
+        profesor = Profesor(
+            usuario_id=u.id,
+            departamento=fake.word()
+        )
+        profesores.append(profesor)
+
+session.add_all(alumnos + profesores)
+session.commit()
+
 
 # Crear libros
 libros = []

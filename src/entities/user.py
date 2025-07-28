@@ -20,19 +20,14 @@ class TipoUsuarioEnum(str, Enum):
 class Usuario(Base):
     __tablename__ = "usuarios"
     id = Column(BigInteger, primary_key=True)
-    password_hash = Column(String(128), nullable=False)
+    password_hash = Column(String(260), nullable=False)
     email = Column(String(120), unique=True, nullable=False)
     nombre = Column(String(50), nullable=False)
     apellido1 = Column(String(50), nullable=False)
     apellido2 = Column(String(50), nullable=True)
     ciudad = Column(String(50), nullable=False)
     estado = Column(PgEnum(EstadoUsuarioEnum), default=EstadoUsuarioEnum.ACTIVO, nullable=False)
-    tipo = Column(PgEnum(TipoUsuarioEnum), nullable=False)  # para herencia
-
-    __mapper_args__ = {
-        "polymorphic_identity": "USUARIO",
-        "polymorphic_on": tipo
-    }
+    tipo = Column(PgEnum(TipoUsuarioEnum), nullable=False)
 
     prestamos_hist = relationship("PrestamoHist", back_populates="usuario")
     multas_hist = relationship("MultaHist", back_populates="usuario")

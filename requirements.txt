@@ -6,6 +6,6 @@
  python-dotenv
  pyjwt
  passlib
- bcrypt
+ argon2
  python-multipart
  email-validator

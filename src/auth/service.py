@@ -26,7 +26,7 @@ ALGORITHM = os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
-bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
+bcrypt_context = CryptContext(schemes=['argon2'], deprecated='auto')
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -67,16 +67,21 @@ def register_user(db: Session, register_user_request: models.RegisterUserRequest
     try:
         if (register_user_request.telefono_padres is None and register_user_request.departamento is None) or (register_user_request.telefono_padres is not None and register_user_request.departamento is not None):
             raise AuthenticationError()
+        print("Ahora un hash: ")
+        password_hash =str(get_password_hash(register_user_request.password))
+        print(password_hash)
+        print(register_user_request.dict())
+        print("Adioss")
         
         new_user = Usuario(
             id=register_user_request.id,
-            password_hash=get_password_hash(register_user_request.password),
             email=register_user_request.email,
             nombre=register_user_request.nombre,
             apellido1=register_user_request.apellido1,
             apellido2=register_user_request.apellido2,
             ciudad=register_user_request.ciudad,
-            tipo=register_user_request.tipo
+            tipo=register_user_request.tipo,
+            password_hash=password_hash
         )    
         db.add(new_user)
         

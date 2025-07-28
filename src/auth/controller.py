@@ -1,10 +1,10 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, Body
 from starlette import status
 from . import  models
 from . import service
 from fastapi.security import OAuth2PasswordRequestForm
-from ..database.core import DbSession
+from ..database.core import DbSession, get_db
 
 router = APIRouter(
     prefix='/auth',
@@ -14,7 +14,7 @@ router = APIRouter(
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def register_user(request: Request, db: DbSession,
-                      register_user_request: models.RegisterUserRequest):
+                      register_user_request: models.RegisterUserRequest = Body(...)):
     service.register_user(db, register_user_request)
 
 
