@@ -11,7 +11,7 @@ class PrestamoHist(Base):
     fecha_prevista = Column(Date, nullable=False)
     fecha_devolucion = Column(Date, nullable=False) # Puede ser igual a fecha prevista o mayor a este (Morosos)
     estado = Column(Boolean, nullable=False, default=False) # Devuelto o no
-    multa_id = Column(Integer, ForeignKey("multas.id"), nullable=True)
+    multa_id = Column(Integer, ForeignKey("multas_hist.id"), nullable=True)
 
     usuario = relationship("Usuario", back_populates="prestamos_hist")
     ejemplar = relationship("Ejemplar", back_populates="prestamos_hist")

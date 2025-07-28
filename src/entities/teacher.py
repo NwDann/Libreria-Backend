@@ -4,7 +4,7 @@ from sqlalchemy import (
   ForeignKey,
   BigInteger
 )
-from .user import Usuario
+from .user import Usuario, TipoUsuarioEnum
 
 class Profesor(Usuario):
     __tablename__ = "profesores"
@@ -12,5 +12,5 @@ class Profesor(Usuario):
     departamento = Column(String(100), nullable=False)
 
     __mapper_args__ = {
-        "polymorphic_identity": "profesor",
+        "polymorphic_identity": TipoUsuarioEnum.PROFESOR.value,
     }

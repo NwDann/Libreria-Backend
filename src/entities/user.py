@@ -30,7 +30,7 @@ class Usuario(Base):
     tipo = Column(PgEnum(TipoUsuarioEnum), nullable=False)  # para herencia
 
     __mapper_args__ = {
-        "polymorphic_identity": "usuario",
+        "polymorphic_identity": "USUARIO",
         "polymorphic_on": tipo
     }
 

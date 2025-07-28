@@ -2,4 +2,5 @@
 2. venv\Scripts\activate.bat
 3. En VsCode, en la parte inferior derecha aplastas la versión de python, y eliges el interprete de venv
 4. pip install -r requirements-dev.txt
-5. Listo
+5. Si es la primera vez, carga la url de postgres en .env y ejecuta seed.py de esta manera: "python seed.py"
+6. Ejecuta el servidor: "uvicorn src.main:app --reload"
