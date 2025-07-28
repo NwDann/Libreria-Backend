@@ -2,7 +2,6 @@ from datetime import timedelta, datetime, timezone
 from typing import Annotated
 from fastapi import Depends
 
-from passlib.context import CryptContext
 import jwt
 from jwt import PyJWTError
 
@@ -21,21 +20,16 @@ import os
 
 load_dotenv()
 
-SECRET_KEY = os.getenv("SECRET-KEY")
+#SECRET_KEY = os.getenv("SECRET-KEY")
+SECRET_KEY = "ABjF7t2pJJ8QSACUuiJ5vv2Qijh4TxRGH9uPcBvX4jabxYRnkWHBgpfBXaFLidia"
 ALGORITHM = os.getenv("ALGORITHM")
-ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
-bcrypt_context = CryptContext(schemes=['argon2'], deprecated='auto')
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return bcrypt_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password: str) -> str:
-    return bcrypt_context.hash(password)
-
+    return plain_password == hashed_password
 
 def authenticate_user(email: str, password: str, db: Session) -> Usuario | bool:
     user = db.query(Usuario).filter(Usuario.email == email).first()
@@ -67,21 +61,16 @@ def register_user(db: Session, register_user_request: models.RegisterUserRequest
     try:
         if (register_user_request.telefono_padres is None and register_user_request.departamento is None) or (register_user_request.telefono_padres is not None and register_user_request.departamento is not None):
             raise AuthenticationError()
-        print("Ahora un hash: ")
-        password_hash =str(get_password_hash(register_user_request.password))
-        print(password_hash)
-        print(register_user_request.dict())
-        print("Adioss")
         
         new_user = Usuario(
             id=register_user_request.id,
+            password_hash=register_user_request.password,
             email=register_user_request.email,
             nombre=register_user_request.nombre,
             apellido1=register_user_request.apellido1,
             apellido2=register_user_request.apellido2,
             ciudad=register_user_request.ciudad,
             tipo=register_user_request.tipo,
-            password_hash=password_hash
         )    
         db.add(new_user)
         

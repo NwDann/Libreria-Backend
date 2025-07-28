@@ -4,9 +4,9 @@ from sqlalchemy import (
   ForeignKey,
   BigInteger
 )
-from .user import Usuario, TipoUsuarioEnum
+from ..database.core import Base
 
-class Profesor(Usuario):
+class Profesor(Base):
     __tablename__ = "profesores"
-    usuario_id = Column(BigInteger, ForeignKey("usuarios.id"), primary_key=True)
+    usuario_id = Column(BigInteger, primary_key=True)
     departamento = Column(String(100), nullable=False)

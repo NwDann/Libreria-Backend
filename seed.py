@@ -61,11 +61,14 @@ for i in range(3):
 session.add_all(usuarios)
 session.commit()
 
+def acortar_string(texto, max_caracteres=20):
+    return texto[:max_caracteres] if len(texto) > max_caracteres else texto
+
 for u in usuarios:
     if u.tipo == TipoUsuarioEnum.ALUMNO:
         alumno = Alumno(
             usuario_id=u.id,
-            telefono_padres=fake.phone_number()
+            telefono_padres=acortar_string(fake.phone_number(), 19)
         )
         alumnos.append(alumno)
     elif u.tipo == TipoUsuarioEnum.PROFESOR:
