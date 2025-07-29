@@ -7,6 +7,7 @@ from ..entities.user import Usuario
 from ..entities.copyBook import Ejemplar
 from ..models.loan_mdl import LoanCreate, LoanResponse, LoanReturnResponse
 from typing import List
+from ..auth.service import CurrentUser
 from ..exceptions import (
     UserNotFoundError, 
     CopyNotFoundError,
@@ -18,17 +19,21 @@ from ..exceptions import (
 
 class LoanService:
     @staticmethod
-    def create_loan(db: Session, loan_data: LoanCreate) -> LoanResponse:
-        user = db.query(Usuario).filter(Usuario.id == loan_data.usuario_id).first()
+    def create_loan(db: Session, loan_data: LoanCreate, current_user: CurrentUser) -> LoanResponse:
+        user_id = current_user.user_id
+        if user_id is None:
+            raise UserNotFoundError()
+        
+        user = db.query(Usuario).filter(Usuario.id == user_id).first()
         if not user:
-            raise UserNotFoundError(loan_data.usuario_id)
+            raise UserNotFoundError(user_id)
             
         if user.estado != "ACTIVO":
             raise UserBlockedError()
             
-        max_loans = 5 if user.tipo == "alumno" else 8
+        max_loans = 5 if user.tipo == "ALUMNO" else 8
         current_loans = db.query(Prestamo).filter(
-            Prestamo.usuario_id == loan_data.usuario_id
+            Prestamo.usuario_id == user_id
         ).count()
         
         if current_loans >= max_loans:
@@ -43,7 +48,7 @@ class LoanService:
             
         loan_days = 7 if user.tipo == "alumno" else 30
         new_loan = Prestamo(
-            usuario_id=loan_data.usuario_id,
+            usuario_id=user_id,
             ejemplar_id=loan_data.ejemplar_id,
             fecha_prestamo=date.today(),
             fecha_prevista=date.today() + timedelta(days=loan_days)

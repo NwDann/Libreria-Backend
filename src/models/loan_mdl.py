@@ -2,7 +2,6 @@ from pydantic import BaseModel
 from datetime import date
 
 class LoanCreate(BaseModel):
-    usuario_id: int
     ejemplar_id: int
 
 class LoanResponse(BaseModel):

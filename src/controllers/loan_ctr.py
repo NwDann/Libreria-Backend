@@ -13,12 +13,7 @@ async def create_loan(
     db: DbSession,
     current_user: CurrentUser
 ):
-    if current_user.user_id != loan_data.usuario_id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="No puedes realizar préstamos para otros usuarios"
-        )
-    return LoanService.create_loan(db, loan_data)
+    return LoanService.create_loan(db, loan_data, current_user)
 
 @router.get("/my-loans", response_model=List[LoanResponse])
 async def get_my_loans(
