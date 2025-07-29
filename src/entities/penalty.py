@@ -8,5 +8,6 @@ class Multa(Base):
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
     fecha_inicio = Column(Date, nullable=False)
     fecha_fin = Column(Date, nullable=False)
+    dias_acumulados = Column(Integer) 
 
     usuario = relationship("Usuario", back_populates="multas")

@@ -10,9 +10,9 @@ router = APIRouter(prefix="/penalties-history", tags=["penalties-history"])
 @router.get("/my-history", response_model=List[PenaltyHistoryResponse])
 async def get_my_penalty_history(
     db: DbSession,
-    current_user: CurrentUser
+    user_id: int  # Query parameter
 ):
-    return PenaltyHistoryService.get_by_user(db, current_user.user_id)
+    return PenaltyHistoryService.get_by_user(db, user_id)
 
 @router.get("/", response_model=List[PenaltyHistoryResponse])
 async def get_all_penalty_history(db: DbSession):
